@@ -9,11 +9,11 @@ gradle makeJar
 
 How to use jar file:
 
--simple way to use exist samples:
+- simple way to use exist samples:
 java -jar <path_to_jar>
 
 - to use with your samples:
 java -jar <path_to_jar> <path_to_origin_sample> <path_to_sample_with_difference>
 
--to use with your samples and element id:
+- to use with your samples and element id:
 java -jar <path_to_jar> <path_to_origin_sample> <path_to_sample_with_difference> <element_id>
