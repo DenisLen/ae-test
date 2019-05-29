@@ -29,16 +29,8 @@ public class FilePathParser {
         return originFilePath;
     }
 
-    public void setOriginFilePath(Path originFilePath) {
-        this.originFilePath = originFilePath;
-    }
-
     public Path getDiffFilePath() {
         LOGGER.info("Using file path to sample with difference: " + originFilePath.toString());
         return diffFilePath;
-    }
-
-    public void setDiffFilePath(Path diffFilePath) {
-        this.diffFilePath = diffFilePath;
     }
 }
