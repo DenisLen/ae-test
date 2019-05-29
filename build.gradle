@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'com.ae'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.jsoup:jsoup:1.11.2'
+    compile 'org.slf4j:slf4j-log4j12:1.7.25'
+}
+
+task makeJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'XML parser',
+                'Implementation-Version': version,
+                'Main-Class': 'com.ae.xmlparser.Parser'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
