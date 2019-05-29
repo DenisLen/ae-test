@@ -30,33 +30,36 @@ public class Parser {
         String elementIdToSearch = Utils.getElementIdToSearch(args);
 
         Element originalElement = docWithOriginalElement.get().getElementById(elementIdToSearch);
-        Element diffElementById = docWithElementWithDifference.get().getElementById(elementIdToSearch);
+        Element elementByIdWithDifference = docWithElementWithDifference.get().getElementById(elementIdToSearch);
 
-        String elementWithDifferenceXpath;
-        if (diffElementById == null) {
+        String xPathForElementWithDifference;
+        if (elementByIdWithDifference == null) {
             Attributes originalElementAttributes = originalElement.attributes();
             Elements allElementsOfDocWithDifference = docWithElementWithDifference.get().getAllElements();
 
-            Map<Element, Integer> mapSortedByIdenticalAttributeFrequency =
-                    Sorter.sortMapByAttributeFrequency(
-                            getElementsWithIdenticalElementFrequency(originalElementAttributes, allElementsOfDocWithDifference)
-                    );
-
-            Element diffElement = mapSortedByIdenticalAttributeFrequency.entrySet().iterator().next().getKey();
-
-            if (mapSortedByIdenticalAttributeFrequency.get(diffElement) > 0) {
-                elementWithDifferenceXpath = getXpathFromDiffDoc(diffElement);
-            } else {
-                throw new NoSuchElementException("Element not found!");
-            }
+            Element matchedElement = searchElementByMatchedAttributes(originalElementAttributes, allElementsOfDocWithDifference);
+            xPathForElementWithDifference = getXpathFromDiffDoc(matchedElement);
         } else {
-            elementWithDifferenceXpath = getXpathFromDiffDoc(diffElementById);
+            xPathForElementWithDifference = getXpathFromDiffDoc(elementByIdWithDifference);
         }
 
-        LOGGER.info("XPath to found Element: " + elementWithDifferenceXpath);
+        LOGGER.info("XPath to found Element: " + xPathForElementWithDifference);
     }
 
+    private static Element searchElementByMatchedAttributes(Attributes originalElementAttributes, Elements allElementsFromDocWithDifference){
+        Map<Element, Integer> mapSortedByIdenticalAttributeFrequency =
+                Sorter.sortMapByAttributeFrequency(
+                        getElementsWithIdenticalElementFrequency(originalElementAttributes, allElementsFromDocWithDifference)
+                );
 
+        Element diffElement = mapSortedByIdenticalAttributeFrequency.entrySet().iterator().next().getKey();
+
+        if (mapSortedByIdenticalAttributeFrequency.get(diffElement) > 0) {
+            return diffElement;
+        } else {
+            throw new NoSuchElementException("Element not found!");
+        }
+    }
 
     private static Map<Element, Integer> getElementsWithIdenticalElementFrequency(Attributes originalAttrs, Elements elements) {
         Map<Element, Integer> elementsWithFrequency = new HashMap<>();
